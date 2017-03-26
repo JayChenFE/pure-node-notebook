@@ -1,0 +1,26 @@
+{
+  "name": "pure-node-notebook",
+  "version": "1.0.0",
+  "description": "a raw Node.js app to create online notebook",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --inspect index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JayChenFE/pure-node-notebook.git"
+  },
+  "keywords": [
+    "node",
+    "notebook"
+  ],
+  "author": "JayChenFE",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JayChenFE/pure-node-notebook/issues"
+  },
+  "homepage": "https://github.com/JayChenFE/pure-node-notebook#readme",
+  "dependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
