@@ -9,6 +9,8 @@
  **/
 
 const fs = require('fs');
+const path = require('path');
+const staticServer = require('./static-server');
 
 
 class App {
@@ -26,37 +28,64 @@ class App {
 				url
 			} = request;
 
-			let staticFun = (url) => {
-				fs.readFile(`./public${url}`, 'utf-8', (error, data) => {
-					response.end(data);
-				});
-			};
 
-			if (url == '/css/index.css') {
 
-				fs.readFile('./public/css/index.css', 'utf-8', (error, data) => {
-					response.end(data);
-				});
+			let body = staticServer(url);
 
-			}
+			response.writeHead(200, 'resolve ok', {
+				'X-Powered-By': 'Node.js'
+			});
 
-			if (url == '/js/index.js') {
+			response.end(body);
+			// const staticPrefix = path.resolve(process.cwd(), 'public');
 
-				fs.readFile('./public/js/index.js', 'utf-8', (error, data) => {
-					response.end(data);
-				});
+			// let staticFun = url => {
+			// 	if (url == '/') {
+			// 		url = '/index.html';
+			// 	}
 
-			}
+			// 	let _path = getPath(url);
+			// 	// fs.readFile(_path, 'binary', (error, data) => {
+			// 	// 	if (error) {
+			// 	// 		data="NOT FOUND";
+			// 	// 	}
+			// 	// 	response.end(data,'binary');
+			// 	// });
+			// 	fs.readFile(_path, (error, data) => {
+			// 		if (error) {
+			// 			data = `NOT FOUND ${error.stack}`;
+			// 		}
+			// 		response.end(data);
+			// 	});
+			// };
 
-			if (url = '/') {
-				//第一个路径相对的是process.cwd();
-				fs.readFile('./public/index.html', 'utf-8', (error, data) => {
+			// staticFun(url);
 
-					response.end(data);
-				});
-			}
+			// if (url == '/css/index.css') {
+
+			// 	fs.readFile('./public/css/index.css', 'utf-8', (error, data) => {
+			// 		response.end(data);
+			// 	});
+
+			// }
+
+			// if (url == '/js/index.js') {
+
+			// 	fs.readFile('./public/js/index.js', 'utf-8', (error, data) => {
+			// 		response.end(data);
+			// 	});
+
+			// }
+
+			// if (url == '/') {
+			// 	//第一个路径相对的是process.cwd();
+			// 	fs.readFile('./public/index.html', 'utf-8', (error, data) => {
+
+			// 		response.end(data);
+			// 	});
+			// }
 		};
-	};
+	}
 }
 
 module.exports = App;
