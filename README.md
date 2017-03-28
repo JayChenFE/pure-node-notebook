@@ -8,6 +8,6 @@
 - 所有语法都在[Node.green](http://node.green/)下的支持列表
 
 ## 目录
--	[第一课:node_modules 及Node项目架构初始化](./tree/master/lesson1)
--	[第二课:http & 静态服务器](./tree/master/lesson2)
--	[第三课:api服务器_Promise讲解](./tree/master/lesson3)
+-	[第一课:node_modules 及Node项目架构初始化](https://github.com/JayChenFE/pure-node-notebook/tree/master/lesson1)
+-	[第二课:http & 静态服务器](https://github.com/JayChenFE/pure-node-notebook/tree/master/lesson2)
+-	[第三课:api服务器_Promise讲解](https://github.com/JayChenFE/pure-node-notebook/tree/master/lesson3)
