@@ -50,33 +50,52 @@ class App {
 			// 	response.end(body);
 			// }
 
-			//返回的string或者buffer
-			let body = '';
-			let headers = {};
-			//以action结尾,认为是ajax
-			if (url.match('.action')) {
+			// //返回的string或者buffer
+			// let body = '';
+			// let headers = {};
+			// //以action结尾,认为是ajax
+			// if (url.match('.action')) {
 
-				body = JSON.stringify(apiServer(url));
-				headers = {
+			// 	body = JSON.stringify(apiServer(url));
+			// 	headers = {
+			// 		'Content-Type': 'application/json'
+			// 	};
+
+			// 	headers = Object.assign(headers, {
+			// 		'X-Powered-By': 'Node.js'
+			// 	});
+			// 	response.writeHead(200, 'resolve ok', headers);
+			// 	response.end(body);
+
+			// } else {
+			// 	body = staticServer(url).then((body) => {
+
+			// 		headers = Object.assign(headers, {
+			// 			'X-Powered-By': 'Node.js'
+			// 		});
+			// 		response.writeHead(200, 'resolve ok', headers);
+			// 		response.end(body);
+			// 	});
+			// }
+
+
+			response.setHeader('X-Powered-By', 'Node.js');
+			apiServer(url).then(data => {
+				response.writeHead(200, 'resolve ok', {
 					'Content-Type': 'application/json'
-				};
-
-				headers = Object.assign(headers, {
-						'X-Powered-By': 'Node.js'
-					});
-				response.writeHead(200, 'resolve ok', headers);
-				response.end(body);
-
-			} else {
-				body = staticServer(url).then((body) => {
-
-					headers = Object.assign(headers, {
-						'X-Powered-By': 'Node.js'
-					});
-					response.writeHead(200, 'resolve ok', headers);
-					response.end(body);
 				});
-			}
+				response.end(data);
+			}, url => {
+				staticServer(url).then(resource => {
+					response.writeHead(200, 'resolve ok');
+					response.end(resource);
+
+				}, error => {
+					response.writeHead(404, 'resource not found');
+					response.end(`NOT FOUND ${error.stack}`);
+
+				});
+			});
 
 		};
 	}

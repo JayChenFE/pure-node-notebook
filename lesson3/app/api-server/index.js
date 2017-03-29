@@ -11,8 +11,12 @@ module.exports = url => {
 		'/user.action': ['Jay', '男', '33']
 	};
 
-	return apiMap[url];
+	return new Promise((resolve, reject) => {
+		if (url in apiMap) {
+			resolve(apiMap[url]);
+
+		} else {
+			reject(url);
+		}
+	});
 };
-
-
-
