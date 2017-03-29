@@ -84,7 +84,7 @@ class App {
 				response.writeHead(200, 'resolve ok', {
 					'Content-Type': 'application/json'
 				});
-				response.end(data);
+				response.end(JSON.stringify(data));
 			}, url => {
 				staticServer(url).then(resource => {
 					response.writeHead(200, 'resolve ok');
