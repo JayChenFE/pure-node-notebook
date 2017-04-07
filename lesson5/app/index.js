@@ -10,15 +10,36 @@
 
 const fs = require('fs');
 const path = require('path');
-const staticServer = require('./static-server');
-const apiServer = require('./api-server');
-const urlParser = require('./url-parser');
+// const staticServer = require('./static-server');
+// const apiServer = require('./api-server');
+// const urlParser = require('./url-parser');
 
 
 class App {
 
 	constructor() {
+		this.middlewareArr = [];
 
+		//设计一个空的promise作为promise链的初始值
+		this.middlewareChain = Promise.resolve();
+
+	}
+
+	use(middleware) {
+		this.middlewareArr.push(middleware);
+	}
+
+	composeMiddleWare(context) {
+		let {
+			middlewareArr
+		} = this;
+		//根据中间件数组,创建Promise链
+		for (let middleware of middlewareArr) {
+			this.middlewareChain = this.middlewareChain.then(() => {
+				return middleware(context);
+			});
+		}
+		return this.middlewareChain;
 	}
 
 	initServer() {
@@ -26,11 +47,11 @@ class App {
 
 		//返回一个函数
 		return (request, response) => {
-			let {
-				method,
-				url
+			// let {
+			// 	method,
+			// 	url
 
-			} = request;
+			// } = request;
 
 			// request.context = {
 			// 	body: '',
@@ -54,34 +75,63 @@ class App {
 
 			};
 
+			this.composeMiddleWare(context).then(() => {
 
-
-			urlParser(context).then(() => {
-				return apiServer(context);
-			}).then(() => {
-				return staticServer(context);
-			}).then(() => {
-				let body = '';
+				let {
+					body,
+					headers
+				} = context.resCtx;
+				
 				let base = {
 					'X-Powered-By': 'Node.js'
 				};
 
-				if (val instanceof Buffer) {
-					body = val;
-					response.writeHead(200, 'resolve ok', base);
-				} else {
+				// if (val instanceof Buffer) {
+				// 	body = val;
+				// 	response.writeHead(200, 'resolve ok', base);
+				// } else {
 
-					body = JSON.stringify(val);
-					let finalHeader = Object.assign(base, {
-						'Content-Type': 'application/json'
-					});
-					response.writeHead(200, 'resolve ok', finalHeader);
+				// 	body = JSON.stringify(val);
+				// 	let finalHeader = Object.assign(base, {
+				// 		'Content-Type': 'application/json'
+				// 	});
+				// 	response.writeHead(200, 'resolve ok', finalHeader);
 
-				}
+				// }
+				response.writeHead(200, 'resolve ok', Object.assign(base, headers));
 				response.end(body);
 
 			});
-			
+			// urlParser(context).then(() => {
+			// 	return apiServer(context);
+			// }).then(() => {
+			// 	return staticServer(context);
+			// }).then(() => {
+			// 	let {
+			// 		body,
+			// 		headers
+			// 	} = context.resCtx;
+			// 	let base = {
+			// 		'X-Powered-By': 'Node.js'
+			// 	};
+
+			// 	// if (val instanceof Buffer) {
+			// 	// 	body = val;
+			// 	// 	response.writeHead(200, 'resolve ok', base);
+			// 	// } else {
+
+			// 	// 	body = JSON.stringify(val);
+			// 	// 	let finalHeader = Object.assign(base, {
+			// 	// 		'Content-Type': 'application/json'
+			// 	// 	});
+			// 	// 	response.writeHead(200, 'resolve ok', finalHeader);
+
+			// 	// }
+			// 	response.writeHead(200, 'resolve ok', Object.assign(base, headers));
+			// 	response.end(body);
+
+			// });
+
 			// urlParser(context).then(() => {
 			// 	return apiServer(request);
 			// }).then(val => {

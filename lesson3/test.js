@@ -53,6 +53,8 @@ var another = Promise.resolve({
 		reject(2);
 	}
 });
+ console.log(1);
+ console.log(another);
 
 // another.then(val => console.log(val));
 another.catch(val => console.log(val));

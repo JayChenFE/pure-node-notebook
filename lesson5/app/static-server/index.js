@@ -15,11 +15,16 @@ let staticFun = ctx => {
 		url
 	} = ctx.req;
 	let {
-		rexCtx
+		resCtx
 	} = ctx;
 
 
 	return new Promise((resolve, reject) => {
+
+		if (url.match('.action')) {
+			resolve();
+		}
+
 		if (url == '/') {
 			url = '/index.html';
 		}
